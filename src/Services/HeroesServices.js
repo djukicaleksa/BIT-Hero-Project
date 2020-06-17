@@ -4,11 +4,10 @@ const fetchAll = () => {
   ).then((res) => res.json());
 };
 
-
-
 const fetchById = (id) => {
-  return fetch(`https://gateway.marvel.com:443/v1/public/characters/1011334?apikey=230dfef498aed52d5b84abc1f9e11d14`)
-    .then((res) => res.json())
-}
+  return fetch(
+    `https://gateway.marvel.com:443/v1/public/characters/${id}?apikey=230dfef498aed52d5b84abc1f9e11d14`
+  ).then((res) => res.json());
+};
 
 export { fetchAll, fetchById };

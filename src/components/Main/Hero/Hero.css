@@ -4,7 +4,6 @@
   margin: 20px;
   background-color: #151515;
   color: white;
-  height: 380px;
 }
 .Hero__Wrapper:hover {
   transition: background-color 0.4s ease-out;
@@ -12,10 +11,13 @@
 }
 .Hero__image {
   width: 100%;
-  height: 205px;
+  height: 200px;
 }
 .Hero__btn {
   display: flex;
   justify-content: space-around;
   margin: 25px auto;
+}
+.Hero__Wrapper > h1 {
+  font-size: 20px;
 }

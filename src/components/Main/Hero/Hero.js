@@ -1,13 +1,16 @@
 import React from "react";
 import "./Hero.css";
+import { Link } from "react-router-dom";
 
-const Hero = ({ name, image }) => {
+const Hero = ({ name, image, id }) => {
   return (
     <div className="Hero__Wrapper">
       <h1 className="Hero__name">{name}</h1>
       <img src={image} alt="slika" className="Hero__image" />
       <div className="Hero__btn">
-        <button>Info</button>
+        <Link to={`/info/${id}`}>
+          <button>Info</button>{" "}
+        </Link>
         <button>Add</button>
       </div>
     </div>
