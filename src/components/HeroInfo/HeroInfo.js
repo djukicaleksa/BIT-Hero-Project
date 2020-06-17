@@ -1,38 +1,30 @@
 import React from "react";
-import { fetchById } from "../../Services/HeroesServices";
+import { HeroService } from "../../Services/HeroService";
 
 import "./HeroInfo.css";
 
 class HeroInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { heroData: [] };
+    this.state = { heroData: null };
   }
   componentDidMount() {
     let id = this.props.match.params.id;
-    fetchById(id).then((res) =>
-      this.setState({ heroData: res.data.results[0] })
-    );
+    new HeroService().fetch(id).then((heroData) => this.setState({ heroData }));
   }
 
   render() {
     //This if awaits for state to get loaded
-    if (this.state.heroData.comics === undefined) {
+    if (!this.state.heroData) {
       return null;
     }
+
+    const { heroData } = this.state;
+
     return (
       <div className="infoPage">
         <div className="imgContainer">
-          {this.state.heroData.id !== undefined ? (
-            <img
-              src={
-                this.state.heroData.thumbnail.path +
-                "." +
-                this.state.heroData.thumbnail.extension
-              }
-              alt="slika"
-            />
-          ) : null}
+          <img src={heroData.avatar} alt="slika" />
         </div>
         <div className="dataContainer">
           <h2>{this.state.heroData.name}</h2>
