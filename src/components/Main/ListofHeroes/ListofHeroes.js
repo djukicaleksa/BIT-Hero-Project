@@ -1,20 +1,27 @@
 import React from "react";
-import { HeroService } from "../../../Services/HeroService";
-import { fetchAllSearches } from "../../../Services/SearchServices";
+
 import { Hero } from "../Hero/Hero";
 import { Search } from "../../Serach/Serach";
+import { HeroService } from "../../../Services/HeroService";
+
 import "./ListofHeroes.css";
 
 class ListofHeroes extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { heroes: [], serchedHero: null };
+    this.state = {
+      heroes: [],
+      serchedHero: null,
+      teamMembers: []
+    };
   }
+
   componentDidMount() {
     new HeroService()
       .fetchAll()
       .then((data) => this.setState({ heroes: data.data.results }));
   }
+
   getSearchedHero = (event) => {
     if (event.target.value) {
       if (event.keyCode === 13) {
@@ -27,6 +34,21 @@ class ListofHeroes extends React.Component {
     }
   };
 
+  addToTeam = id => {
+    console.log(id);
+    for (let i = 0; i < this.state.teamMembers.length; i++) {
+      if (id === this.state.teamMembers[i].id) {
+        continue
+      }
+
+      this.state.heroes.map((hero, i) => {
+        if (hero.id === id) {
+          this.state.teamMembers.push(hero);
+        }
+      })
+
+    }
+  }
   render() {
     return (
       <div>
@@ -54,10 +76,13 @@ class ListofHeroes extends React.Component {
               name={item.name}
               image={item.thumbnail.path + "." + item.thumbnail.extension}
               id={item.id}
+              addMember={this.addToTeam}
             />
           ))}
         </div>
       </div>
+
+
     );
   }
 }
