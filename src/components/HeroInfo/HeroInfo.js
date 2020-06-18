@@ -1,6 +1,6 @@
 import React from "react";
 import { fetchById, fetchCharComics } from "../../Services/HeroesServices";
-import { Comic } from './ComicList/Comic'
+import { Comic } from './Comic/Comic'
 import { Switch } from 'react-materialize';
 import 'materialize-css/dist/js/materialize.js'
 import 'materialize-css/dist/css/materialize.css'

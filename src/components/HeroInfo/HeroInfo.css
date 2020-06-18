@@ -6,9 +6,6 @@
     flex-wrap: wrap;
     margin: 0 auto;
 }
-/* .imgContainer,.dataContainer {
-    /* width: 50%;
- } */
 .imgContainer img {
     max-width: 50%;
     display: flex;
