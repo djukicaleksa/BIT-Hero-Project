@@ -1,18 +1,28 @@
 import React from "react";
-import { fetchById } from "../../Services/HeroesServices";
-
+import { fetchById, fetchCharComics } from "../../Services/HeroesServices";
+import { Comic } from './ComicList/Comic'
+import { Switch } from 'react-materialize';
+import 'materialize-css/dist/js/materialize.js'
+import 'materialize-css/dist/css/materialize.css'
 import "./HeroInfo.css";
 
 class HeroInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { heroData: [] };
+    this.state = { heroData: [], comicsIsVisible: false, comicInfo: [] };
   }
   componentDidMount() {
     let id = this.props.match.params.id;
     fetchById(id).then((res) =>
       this.setState({ heroData: res.data.results[0] })
     );
+  }
+  showComics = () => {
+    let id = this.props.match.params.id;
+    fetchCharComics(id).then(comicDetails => this.setState({ comicInfo: comicDetails }));
+    console.log(this.state.heroData);
+
+    this.state.comicsIsVisible ? this.setState({ comicsIsVisible: false }) : this.setState({ comicsIsVisible: true })
   }
 
   render() {
@@ -49,6 +59,25 @@ class HeroInfo extends React.Component {
             </a>
           </ul>
         </div>
+
+        {/* <button onClick={this.showComics}>Show Comics</button> */}
+        <div className='switch'>
+          <Switch
+            id="Switch-11"
+            offLabel="Hide comics"
+            onChange={this.showComics}
+            onLabel="Show comics"
+          />
+        </div>
+
+        <ul className='comicList'>
+          {/**Here we check if comicsIsVIsible is set to true, if it is it will render comics,else it will render nothing */}
+          {this.state.comicsIsVisible ? this.state.comicInfo.map((comic, i) => {
+            return (
+              <Comic key={i} name={comic.title} url={comic.images[0].path + '.' + comic.images[0].extension} />
+            )
+          }) : null}</ul>
+
       </div>
     );
   }
