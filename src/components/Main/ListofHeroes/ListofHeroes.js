@@ -1,90 +1,70 @@
 import React from "react";
-
+import { HeroService } from "../../../Services/HeroService";
+import { fetchAllSearches } from "../../../Services/SearchServices";
 import { Hero } from "../Hero/Hero";
 import { Search } from "../../Serach/Serach";
-import { HeroService } from "../../../Services/HeroService";
-
 import "./ListofHeroes.css";
 
 class ListofHeroes extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      heroes: [],
-      serchedHero: null,
-      teamMembers: []
-    };
+    this.state = { heroes: [], serchedHero: null };
   }
-
   componentDidMount() {
     new HeroService()
       .fetchAll()
       .then((data) => this.setState({ heroes: data.data.results }));
   }
-
   getSearchedHero = (event) => {
     if (event.target.value) {
-      if (event.keyCode === 13) {
-        new HeroService().search(event.target.value).then((res) =>
+      new HeroService()
+        .search(event.target.value)
+        .then((res) =>
           res.data.results.length !== 0
-            ? this.setState({ serchedHero: res.data.results[0] })
+            ? this.setState({ serchedHero: res.data.results })
             : null
         );
-      }
+    }
+    if (event.target.value === "") {
+      this.setState({ serchedHero: null });
+      new HeroService()
+        .fetchAll()
+        .then((data) => this.setState({ heroes: data.data.results }));
     }
   };
 
-  addToTeam = id => {
-    console.log(id);
-    for (let i = 0; i < this.state.teamMembers.length; i++) {
-      if (id === this.state.teamMembers[i].id) {
-        continue
-      }
-
-      this.state.heroes.map((hero, i) => {
-        if (hero.id === id) {
-          this.state.teamMembers.push(hero);
-        }
-      })
-
-    }
-  }
   render() {
     return (
       <div>
         <input
           type="search"
           placeholder="Enter heroes name...."
-          onKeyDown={this.getSearchedHero}
+          onChange={this.getSearchedHero}
           className="ListofHeroes__searchField"
         />
         {this.state.serchedHero !== null ? (
-          <Search
-            id={this.state.serchedHero.id}
-            name={this.state.serchedHero.name}
-            image={
-              this.state.serchedHero.thumbnail.path +
-              "." +
-              this.state.serchedHero.thumbnail.extension
-            }
-          />
-        ) : null}
-        <div className="ListofHeroes__wrapper">
-          {this.state.heroes.map((item, i) => (
-            <Hero
-              key={i}
+          this.state.serchedHero.map((item) => (
+            <Search
+              id={item.id}
               name={item.name}
               image={item.thumbnail.path + "." + item.thumbnail.extension}
-              id={item.id}
-              addMember={this.addToTeam}
             />
-          ))}
-        </div>
+          ))
+        ) : (
+          <div className="ListofHeroes__wrapper">
+            {this.state.heroes.map((item, i) => (
+              <Hero
+                key={i}
+                name={item.name}
+                image={item.thumbnail.path + "." + item.thumbnail.extension}
+                id={item.id}
+              />
+            ))}
+          </div>
+        )}
+        ;
       </div>
-
-
     );
   }
 }
-
 export { ListofHeroes };
