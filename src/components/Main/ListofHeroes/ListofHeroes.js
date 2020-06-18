@@ -14,10 +14,14 @@ class ListofHeroes extends React.Component {
     fetchAll().then((data) => this.setState({ heroes: data.data.results }));
   }
   getSearchedHero = (event) => {
-    if (event.keyCode === 13) {
+    if (event.target.value !== "") {
       fetchAllSearches(event.target.value).then((res) =>
-        this.setState({ serchedHero: res.data.results[0] })
+        this.setState({ serchedHero: res.data.results })
       );
+    }
+    if (event.target.value === "") {
+      this.setState({ serchedHero: null });
+      fetchAll().then((data) => this.setState({ heroes: data.data.results }));
     }
   };
 
@@ -27,28 +31,29 @@ class ListofHeroes extends React.Component {
         <input
           type="search"
           placeholder="Enter heroes name...."
-          onKeyDown={this.getSearchedHero}
+          onChange={this.getSearchedHero}
         />
+
         {this.state.serchedHero !== null ? (
-          <Search
-            name={this.state.serchedHero.name}
-            image={
-              this.state.serchedHero.thumbnail.path +
-              "." +
-              this.state.serchedHero.thumbnail.extension
-            }
-          />
-        ) : null}
-        <div className="ListofHeroes__wrapper">
-          {this.state.heroes.map((item, i) => (
-            <Hero
-              key={i}
+          this.state.serchedHero.map((item) => (
+            <Search
               name={item.name}
               image={item.thumbnail.path + "." + item.thumbnail.extension}
               id={item.id}
             />
-          ))}
-        </div>
+          ))
+        ) : (
+          <div className="ListofHeroes__wrapper">
+            {this.state.heroes.map((item, i) => (
+              <Hero
+                key={i}
+                name={item.name}
+                image={item.thumbnail.path + "." + item.thumbnail.extension}
+                id={item.id}
+              />
+            ))}
+          </div>
+        )}
       </div>
     );
   }

@@ -16,7 +16,6 @@ const fetchCharComics = (id) => {
     .then(rawData => {
       console.log(rawData.data.results);
       return rawData.data.results;
-
     })
 }
 
