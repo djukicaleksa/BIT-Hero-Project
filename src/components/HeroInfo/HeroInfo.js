@@ -1,20 +1,22 @@
 import React from "react";
-import { fetchById, fetchCharComics } from "../../Services/HeroesServices";
+import { HeroService } from "../../Services/HeroService";
 import { Comic } from './Comic/Comic'
 import { Switch } from 'react-materialize';
 import 'materialize-css/dist/js/materialize.js'
 import 'materialize-css/dist/css/materialize.css'
 import "./HeroInfo.css";
 
+import "./HeroInfo.css";
+
 class HeroInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { heroData: [], comicsIsVisible: false, comicInfo: [], imgFullScreen: false };
+    this.state = { heroData: null, comicInfo: [], imgFullScreen: false, comicsIsVIsible: false };
   }
   componentDidMount() {
     let id = this.props.match.params.id;
-    fetchById(id).then((res) =>
-      this.setState({ heroData: res.data.results[0] })
+    new HeroService().fetch(id).then(heroData =>
+      this.setState({ heroData })
     );
   }
   showFullImage = () => {
@@ -22,7 +24,7 @@ class HeroInfo extends React.Component {
   }
   showComics = () => {
     let id = this.props.match.params.id;
-    fetchCharComics(id).then(comicDetails => this.setState({ comicInfo: comicDetails }));
+    new HeroService().fetchCharComics(id).then(comicDetails => this.setState({ comicInfo: comicDetails }));
     console.log(this.state.heroData);
 
     this.state.comicsIsVisible ? this.setState({ comicsIsVisible: false }) : this.setState({ comicsIsVisible: true })
@@ -30,7 +32,7 @@ class HeroInfo extends React.Component {
 
   render() {
     //This if awaits for state to get loaded
-    if (this.state.heroData.comics === undefined) {
+    if (this.state.heroData === null) {
       return null;
     }
 
@@ -39,9 +41,7 @@ class HeroInfo extends React.Component {
       this.state.imgFullScreen ? <div className='fullscreen'>
         <img
           src={
-            this.state.heroData.thumbnail.path +
-            "." +
-            this.state.heroData.thumbnail.extension
+            this.state.heroData.avatar
           }
           alt="slika" onClick={this.showFullImage}
 
@@ -52,9 +52,7 @@ class HeroInfo extends React.Component {
 
             <img
               src={
-                this.state.heroData.thumbnail.path +
-                "." +
-                this.state.heroData.thumbnail.extension
+                this.state.heroData.avatar
               }
               alt="slika" onClick={this.showFullImage}
             />
@@ -64,13 +62,13 @@ class HeroInfo extends React.Component {
             <h2>{this.state.heroData.name}</h2>
             <ul>
               <li>
-                Appeared at {this.state.heroData.comics.available} comic issues
-            </li>
+                Appeared at {this.state.heroData.appears} comic issues
+              </li>
               <li>Last modified {this.state.heroData.modified}</li>
-              <a href={this.state.heroData.urls[1].url}>
+              <a href={this.state.heroData.lastModified}>
                 <li>Find char details here</li>
               </a>
-              <a href={this.state.heroData.urls[0].url}>
+              <a href={this.state.heroData.details}>
                 <li>List of comics</li>
               </a>
             </ul>
@@ -103,3 +101,46 @@ class HeroInfo extends React.Component {
 }
 
 export { HeroInfo };
+
+
+
+//   }
+//   componentDidMount() {
+//     let id = this.props.match.params.id;
+//     new HeroService().fetch(id).then((heroData) => this.setState({ heroData }));
+//   }
+
+//   render() {
+//     //This if awaits for state to get loaded
+//     if (!this.state.heroData) {
+//       return null;
+//     }
+
+//     const { heroData } = this.state;
+
+//     return (
+//       <div className="infoPage">
+//         <div className="imgContainer">
+//           <img src={heroData.avatar} alt="slika" />
+//         </div>
+//         <div className="dataContainer">
+//           <h2>{this.state.heroData.name}</h2>
+//           <ul>
+//             <li>
+//               Appeared at {this.state.heroData.comics.available} comic issues
+//             </li>
+//             <li>Last modified {this.state.heroData.modified}</li>
+//             <a href={this.state.heroData.urls[1].url}>
+//               <li>Find char details here</li>
+//             </a>
+//             <a href={this.state.heroData.urls[0].url}>
+//               <li>List of comics</li>
+//             </a>
+//           </ul>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
+
+// export { HeroInfo };

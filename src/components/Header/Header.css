@@ -4,4 +4,5 @@
 .Header__title {
   color: white;
   padding-left: 30px;
+  text-decoration: underline #ec1d24;
 }
