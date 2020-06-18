@@ -18,7 +18,7 @@ class ListofHeroes extends React.Component {
   getSearchedHero = (event) => {
     if (event.target.value) {
       if (event.keyCode === 13) {
-        fetchAllSearches(event.target.value).then((res) =>
+        new HeroService().search(event.target.value).then((res) =>
           res.data.results.length !== 0
             ? this.setState({ serchedHero: res.data.results[0] })
             : null
