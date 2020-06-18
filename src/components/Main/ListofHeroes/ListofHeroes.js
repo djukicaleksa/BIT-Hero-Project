@@ -3,12 +3,13 @@ import { HeroService } from "../../../Services/HeroService";
 import { fetchAllSearches } from "../../../Services/SearchServices";
 import { Hero } from "../Hero/Hero";
 import { Search } from "../../Serach/Serach";
+import { TeamMember } from "../TeamMember/TeamMember";
 import "./ListofHeroes.css";
 
 class ListofHeroes extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { heroes: [], serchedHero: null };
+    this.state = { heroes: [], serchedHero: null, teamMembers: [] };
   }
   componentDidMount() {
     new HeroService()
@@ -32,37 +33,53 @@ class ListofHeroes extends React.Component {
         .then((data) => this.setState({ heroes: data.data.results }));
     }
   };
+  addMember = (id) => {
+    this.state.heroes.map(hero => {
+      if (id === hero.id && !this.state.teamMembers.includes(hero)) {
+        // this.state.teamMembers.push(hero)
+        this.setState({ teamMembers: [...this.state.teamMembers, hero] })
+      }
+    }
+    )
+  }
 
   render() {
     return (
-      <div>
-        <input
-          type="search"
-          placeholder="Enter heroes name...."
-          onChange={this.getSearchedHero}
-          className="ListofHeroes__searchField"
-        />
-        {this.state.serchedHero !== null ? (
-          this.state.serchedHero.map((item) => (
-            <Search
-              id={item.id}
-              name={item.name}
-              image={item.thumbnail.path + "." + item.thumbnail.extension}
-            />
-          ))
-        ) : (
-          <div className="ListofHeroes__wrapper">
-            {this.state.heroes.map((item, i) => (
-              <Hero
-                key={i}
+      <div className="Container" >
+        <div>
+          <input
+            type="search"
+            placeholder="Enter heroes name...."
+            onChange={this.getSearchedHero}
+            className="ListofHeroes__searchField"
+          />
+          {this.state.serchedHero !== null ? (
+            this.state.serchedHero.map((item) => (
+              <Search
+                id={item.id}
                 name={item.name}
                 image={item.thumbnail.path + "." + item.thumbnail.extension}
-                id={item.id}
               />
-            ))}
-          </div>
-        )}
-        ;
+            ))
+          ) : (
+              <div className="ListofHeroes__wrapper">
+                {this.state.heroes.map((item, i) => (
+                  <Hero
+                    key={i}
+                    name={item.name}
+                    image={item.thumbnail.path + "." + item.thumbnail.extension}
+                    id={item.id}
+                    addMember={this.addMember}
+                  />
+                ))}
+              </div>
+            )}
+          ;
+      </div>
+        <div className='team'>
+          <h1>My Team</h1>
+          {this.state.teamMembers.map((member, i) => <TeamMember url={`${member.thumbnail.path}.${member.thumbnail.extension}`} name={member.name}></TeamMember>)}
+        </div>
       </div>
     );
   }

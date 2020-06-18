@@ -1,0 +1,22 @@
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    position: relative;
+}
+.member{
+    max-width: 150px;
+    width: 100%;
+    padding: 1vh;
+}
+.deleteIcon{
+    max-width: 100px;
+    position: absolute;
+    display: none;
+    top: 21px;
+    left: 20px;
+}
+
+.wrapper:hover > .deleteIcon{
+    display: block;
+}
