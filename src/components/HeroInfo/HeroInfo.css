@@ -6,10 +6,10 @@
     flex-wrap: wrap;
     margin: 0 auto;
 }
-.imgContainer,.dataContainer {
-    width: 50%;
-}
-img {
+/* .imgContainer,.dataContainer {
+    /* width: 50%;
+ } */
+.imgContainer img {
     max-width: 50%;
     display: flex;
     padding: 3vw;
@@ -17,4 +17,25 @@ img {
 }
 .dataContainer {
     padding: 3vw;
+    width: 100%;
+}
+
+.comicList{
+    display: flex;
+    flex-wrap: wrap;
+}
+.comicList li {
+    /* float: left; */
+    margin: 1vw;
+    max-width: 20%;
+}
+.comicList p {
+    text-justify: auto;
+}
+.comicImg{
+    max-width: 200px;
+}
+.switch {
+    width: 100%;
+    margin: 0 auto;
 }
