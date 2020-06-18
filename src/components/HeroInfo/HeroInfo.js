@@ -11,7 +11,7 @@ import "./HeroInfo.css";
 class HeroInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { heroData: null, comicInfo:[] };
+    this.state = { heroData: null, comicInfo: [], imgFullScreen: false, comicsIsVIsible: false };
   }
   componentDidMount() {
     let id = this.props.match.params.id;
@@ -41,9 +41,7 @@ class HeroInfo extends React.Component {
       this.state.imgFullScreen ? <div className='fullscreen'>
         <img
           src={
-            this.state.heroData.thumbnail.path +
-            "." +
-            this.state.heroData.thumbnail.extension
+            this.state.heroData.avatar
           }
           alt="slika" onClick={this.showFullImage}
 
