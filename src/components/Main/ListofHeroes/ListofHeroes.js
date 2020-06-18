@@ -1,9 +1,9 @@
 import React from "react";
-import { fetchAll } from "../../../Services/HeroesServices";
+import { HeroService } from "../../../Services/HeroService";
 import { fetchAllSearches } from "../../../Services/SearchServices";
 import { Hero } from "../Hero/Hero";
-import "./ListofHeroes.css";
 import { Search } from "../../Serach/Serach";
+import "./ListofHeroes.css";
 
 class ListofHeroes extends React.Component {
   constructor(props) {
@@ -11,17 +11,25 @@ class ListofHeroes extends React.Component {
     this.state = { heroes: [], serchedHero: null };
   }
   componentDidMount() {
-    fetchAll().then((data) => this.setState({ heroes: data.data.results }));
+    new HeroService()
+      .fetchAll()
+      .then((data) => this.setState({ heroes: data.data.results }));
   }
   getSearchedHero = (event) => {
-    if (event.target.value !== "") {
-      fetchAllSearches(event.target.value).then((res) =>
-        this.setState({ serchedHero: res.data.results })
-      );
+    if (event.target.value) {
+      new HeroService()
+        .search(event.target.value)
+        .then((res) =>
+          res.data.results.length !== 0
+            ? this.setState({ serchedHero: res.data.results })
+            : null
+        );
     }
     if (event.target.value === "") {
       this.setState({ serchedHero: null });
-      fetchAll().then((data) => this.setState({ heroes: data.data.results }));
+      new HeroService()
+        .fetchAll()
+        .then((data) => this.setState({ heroes: data.data.results }));
     }
   };
 
@@ -32,14 +40,14 @@ class ListofHeroes extends React.Component {
           type="search"
           placeholder="Enter heroes name...."
           onChange={this.getSearchedHero}
+          className="ListofHeroes__searchField"
         />
-
         {this.state.serchedHero !== null ? (
           this.state.serchedHero.map((item) => (
             <Search
+              id={item.id}
               name={item.name}
               image={item.thumbnail.path + "." + item.thumbnail.extension}
-              id={item.id}
             />
           ))
         ) : (
@@ -54,9 +62,9 @@ class ListofHeroes extends React.Component {
             ))}
           </div>
         )}
+        ;
       </div>
     );
   }
 }
-
 export { ListofHeroes };
