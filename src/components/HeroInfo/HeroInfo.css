@@ -13,11 +13,17 @@
     max-width: 50%;
     display: flex;
     padding: 3vw;
+    margin: 0 auto;
     
+}
+img:hover{
+    cursor:zoom-in;
 }
 .dataContainer {
     padding: 3vw;
     width: 100%;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .comicList{
@@ -38,4 +44,8 @@
 .switch {
     width: 100%;
     margin: 0 auto;
+}
+.fullscreen{
+    max-width: 900px;
+    margin :0 auto;
 }
