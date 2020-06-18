@@ -15,6 +15,16 @@ export class HeroService {
       .then((rawData) => new Hero(rawData.data.results[0]));
   }
 
+  fetchCharComics(id) {
+    return fetch(`https://gateway.marvel.com:443/v1/public/characters/${id}/comics?apikey=${apiKey}`)
+      .then(response => response.json())
+      .then(rawData => {
+        console.log(rawData.data.results);
+        return rawData.data.results;
+
+      })
+  }
+
   search(name) {
     return fetch(
       `https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=${name}&apikey=230dfef498aed52d5b84abc1f9e11d14`
