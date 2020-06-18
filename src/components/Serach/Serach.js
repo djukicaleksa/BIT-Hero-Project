@@ -9,4 +9,5 @@ const Search = ({ name, image, id }) => {
     </div>
   );
 };
+
 export { Search };

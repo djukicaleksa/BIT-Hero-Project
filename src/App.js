@@ -1,9 +1,11 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+
 
 import { Header } from "./components/Header/Header";
 import { HeroInfo } from "./components/HeroInfo/HeroInfo";
 import { ListofHeroes } from "./components/Main/ListofHeroes/ListofHeroes";
+import { Switch, Route } from "react-router-dom";
+import { ComicInfo } from "./components/ComicInfo/ComicInfo";
 
 function App() {
   return (
@@ -12,6 +14,7 @@ function App() {
       <Switch>
         <Route exact path="/" component={ListofHeroes} />
         <Route path="/info/:id" component={HeroInfo} />
+        <Route path="/comic/:id" component={ComicInfo} />
       </Switch>
     </div>
   );
