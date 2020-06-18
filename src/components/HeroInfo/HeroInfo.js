@@ -1,17 +1,22 @@
 import React from "react";
 import { HeroService } from "../../Services/HeroService";
+import { Comic } from './Comic/Comic'
+import { Switch } from 'react-materialize';
+import 'materialize-css/dist/js/materialize.js'
+import 'materialize-css/dist/css/materialize.css'
+import "./HeroInfo.css";
 
 import "./HeroInfo.css";
 
 class HeroInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { heroData: null };
+    this.state = { heroData: null, comicInfo:[] };
   }
   componentDidMount() {
     let id = this.props.match.params.id;
     new HeroService().fetch(id).then(heroData =>
-      this.setState({ heroData: heroData })
+      this.setState({ heroData })
     );
   }
   showFullImage = () => {
@@ -27,7 +32,7 @@ class HeroInfo extends React.Component {
 
   render() {
     //This if awaits for state to get loaded
-    if (this.state.heroData.comics === undefined) {
+    if (this.state.heroData === null) {
       return null;
     }
 
@@ -49,9 +54,7 @@ class HeroInfo extends React.Component {
 
             <img
               src={
-                this.state.heroData.thumbnail.path +
-                "." +
-                this.state.heroData.thumbnail.extension
+                this.state.heroData.avatar
               }
               alt="slika" onClick={this.showFullImage}
             />
@@ -61,13 +64,13 @@ class HeroInfo extends React.Component {
             <h2>{this.state.heroData.name}</h2>
             <ul>
               <li>
-                Appeared at {this.state.heroData.comics.available} comic issues
+                Appeared at {this.state.heroData.appears} comic issues
               </li>
               <li>Last modified {this.state.heroData.modified}</li>
-              <a href={this.state.heroData.urls[1].url}>
+              <a href={this.state.heroData.lastModified}>
                 <li>Find char details here</li>
               </a>
-              <a href={this.state.heroData.urls[0].url}>
+              <a href={this.state.heroData.details}>
                 <li>List of comics</li>
               </a>
             </ul>

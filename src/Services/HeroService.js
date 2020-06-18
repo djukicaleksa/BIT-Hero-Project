@@ -1,5 +1,5 @@
 import { Hero } from "../entities/Hero";
-
+let apiKey = '230dfef498aed52d5b84abc1f9e11d14'
 export class HeroService {
   fetchAll() {
     return fetch(
