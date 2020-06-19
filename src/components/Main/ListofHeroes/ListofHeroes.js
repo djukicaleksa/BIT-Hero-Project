@@ -1,5 +1,5 @@
 import React from "react";
-import { heroService } from "../../../Services/heroService";
+import { heroService } from "../../../Services/HeroService";
 import { Hero } from "../Hero/Hero";
 import { Search } from "../../Serach/Serach";
 import { TeamMember } from "../TeamMember/TeamMember";
@@ -32,7 +32,8 @@ class ListofHeroes extends React.Component {
         .then((data) => this.setState({ heroes: data.data.results }));
     }
   };
-  addMember = (id) => {
+  addMember = (id, key) => {
+    localStorage.setItem()
     this.state.heroes.map(hero => {
       if (id === hero.id && !this.state.teamMembers.includes(hero)) {
         // this.state.teamMembers.push(hero)
@@ -40,6 +41,13 @@ class ListofHeroes extends React.Component {
       }
     }
     )
+  }
+  removeMember = (id, key) => {
+    console.log(id);
+    let prevMembers = this.state.teamMembers;
+    let newMembers = prevMembers.filter(member => member.id !== id);
+    this.setState({ teamMembers: newMembers });
+
   }
 
   render() {
@@ -77,7 +85,7 @@ class ListofHeroes extends React.Component {
       </div>
         <div className='team'>
           <h1>My Team</h1>
-          {this.state.teamMembers.map((member, i) => <TeamMember url={`${member.thumbnail.path}.${member.thumbnail.extension}`} name={member.name}></TeamMember>)}
+          {this.state.teamMembers.map((member, i) => <TeamMember key={i} removeMember={this.removeMember} id={member.id} url={`${member.thumbnail.path}.${member.thumbnail.extension}`} name={member.name}></TeamMember>)}
         </div>
       </div>
     );

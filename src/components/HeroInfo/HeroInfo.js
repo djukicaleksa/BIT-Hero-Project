@@ -2,7 +2,7 @@ import React from "react";
 
 import { Comic } from "./Comic/Comic";
 import { Switch } from "react-materialize";
-import { heroService } from "../../Services/heroService";
+import { heroService } from "../../Services/HeroService";
 
 import "./HeroInfo.css";
 import "materialize-css/dist/js/materialize.js";
