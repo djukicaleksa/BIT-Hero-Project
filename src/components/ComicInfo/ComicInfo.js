@@ -12,7 +12,7 @@ class ComicInfo extends React.Component {
   componentDidMount() {
     const id = this.props.match.params.id;
     new ComicService()
-      .fetch(id)
+      .fetchAxios(id)
       .then((res) => this.setState({ comic: res.data.results[0] }));
   }
   render() {

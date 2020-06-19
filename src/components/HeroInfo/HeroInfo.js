@@ -1,12 +1,13 @@
 import React from "react";
-import { HeroService } from "../../Services/HeroService";
+
 import { Comic } from "./Comic/Comic";
 import { Switch } from "react-materialize";
-import "materialize-css/dist/js/materialize.js";
-import "materialize-css/dist/css/materialize.css";
-import "./HeroInfo.css";
+import { heroService } from "../../Services/heroService";
 
 import "./HeroInfo.css";
+import "materialize-css/dist/js/materialize.js";
+import "materialize-css/dist/css/materialize.css";
+
 
 class HeroInfo extends React.Component {
   constructor(props) {
@@ -18,18 +19,22 @@ class HeroInfo extends React.Component {
       comicsIsVIsible: false,
     };
   }
+
   componentDidMount() {
     let id = this.props.match.params.id;
-    new HeroService().fetch(id).then((heroData) => this.setState({ heroData }));
+    heroService
+      .fetch(id).then((heroData) => this.setState({ heroData }));
   }
+
   showFullImage = () => {
     this.state.imgFullScreen
       ? this.setState({ imgFullScreen: false })
       : this.setState({ imgFullScreen: true });
-  };
+  }
+
   showComics = () => {
     let id = this.props.match.params.id;
-    new HeroService()
+    heroService
       .fetchCharComics(id)
       .then((comicDetails) => this.setState({ comicInfo: comicDetails }));
     console.log(this.state.heroData);
@@ -56,42 +61,42 @@ class HeroInfo extends React.Component {
           />
         </div>
       ) : (
-        <div className="infoPage">
-          <div className="imgContainer">
-            <img
-              src={this.state.heroData.avatar}
-              alt="slika"
-              onClick={this.showFullImage}
-            />
-          </div>
-          <div className="dataContainer">
-            <h2>{this.state.heroData.name}</h2>
-            <ul>
-              <li>Appeared at {this.state.heroData.appears} comic issues</li>
-              <li>Last modified {this.state.heroData.modified}</li>
-              <a href={this.state.heroData.lastModified}>
-                <li>Find char details here</li>
-              </a>
-              <a href={this.state.heroData.details}>
-                <li>List of comics</li>
-              </a>
-            </ul>
-          </div>
+          <div className="infoPage">
+            <div className="imgContainer">
+              <img
+                src={this.state.heroData.avatar}
+                alt="slika"
+                onClick={this.showFullImage}
+              />
+            </div>
+            <div className="dataContainer">
+              <h2>{this.state.heroData.name}</h2>
+              <ul>
+                <li>Appeared at {this.state.heroData.appears} comic issues</li>
+                <li>Last modified {this.state.heroData.modified}</li>
+                <a href={this.state.heroData.lastModified}>
+                  <li>Find char details here</li>
+                </a>
+                <a href={this.state.heroData.details}>
+                  <li>List of comics</li>
+                </a>
+              </ul>
+            </div>
 
-          {/* <button onClick={this.showComics}>Show Comics</button> */}
-          <div className="switch">
-            <Switch
-              id="Switch-11"
-              offLabel="Hide comics"
-              onChange={this.showComics}
-              onLabel="Show comics"
-            />
-          </div>
+            {/* <button onClick={this.showComics}>Show Comics</button> */}
+            <div className="switch">
+              <Switch
+                id="Switch-11"
+                offLabel="Hide comics"
+                onChange={this.showComics}
+                onLabel="Show comics"
+              />
+            </div>
 
-          <ul className="comicList">
-            {/**Here we check if comicsIsVIsible is set to true, if it is it will render comics,else it will render nothing */}
-            {this.state.comicsIsVisible
-              ? this.state.comicInfo.map((comic, i) => {
+            <ul className="comicList">
+              {/**Here we check if comicsIsVIsible is set to true, if it is it will render comics,else it will render nothing */}
+              {this.state.comicsIsVisible
+                ? this.state.comicInfo.map((comic, i) => {
                   if (comic.images[0] === undefined) {
                     return null;
                   }
@@ -106,10 +111,10 @@ class HeroInfo extends React.Component {
                     />
                   );
                 })
-              : null}
-          </ul>
-        </div>
-      )
+                : null}
+            </ul>
+          </div>
+        )
     );
   }
 }

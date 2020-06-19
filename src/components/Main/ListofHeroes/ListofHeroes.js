@@ -1,6 +1,5 @@
 import React from "react";
-import { HeroService } from "../../../Services/HeroService";
-import { fetchAllSearches } from "../../../Services/SearchServices";
+import { heroService } from "../../../Services/heroService";
 import { Hero } from "../Hero/Hero";
 import { Search } from "../../Serach/Serach";
 import { TeamMember } from "../TeamMember/TeamMember";
@@ -12,13 +11,13 @@ class ListofHeroes extends React.Component {
     this.state = { heroes: [], serchedHero: null, teamMembers: [] };
   }
   componentDidMount() {
-    new HeroService()
+    heroService
       .fetchAll()
       .then((data) => this.setState({ heroes: data.data.results }));
   }
   getSearchedHero = (event) => {
     if (event.target.value) {
-      new HeroService()
+      heroService
         .search(event.target.value)
         .then((res) =>
           res.data.results.length !== 0
@@ -28,7 +27,7 @@ class ListofHeroes extends React.Component {
     }
     if (event.target.value === "") {
       this.setState({ serchedHero: null });
-      new HeroService()
+      heroService
         .fetchAll()
         .then((data) => this.setState({ heroes: data.data.results }));
     }
