@@ -1,8 +1,22 @@
+import { API,apiKey } from '../shared/constants';
+
+
 class ComicService {
-  fetch(id) {
-    return fetch(
-      `https://gateway.marvel.com:443/v1/public/comics/${id}?apikey=230dfef498aed52d5b84abc1f9e11d14`
-    ).then((rawData) => rawData.json());
+  //This is fetch request that has been deprecated by AXIOS 
+  // fetch(id) {
+  //   return fetch(
+  //     `https://gateway.marvel.com:443/v1/public/comics/${id}?apikey=${apiKey}`
+  //   ).then((rawData) => rawData.json());
+  // }
+
+  fetchAxios(id) {
+
+    return API.get(`/comics/${id}?apikey=${apiKey}`)
+      .then(response => response.data);
+
+
   }
 }
+
+
 export { ComicService };
