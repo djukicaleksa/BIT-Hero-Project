@@ -11,7 +11,7 @@ const Hero = ({ name, image, id, addMember }) => {
         <Link to={`/info/${id}`}>
           <button>Info</button>{" "}
         </Link>
-        <button onClick={() => addMember(id)}>Add</button>
+        <button onClick={() => addMember(id,)}>Add</button>
       </div>
     </div>
   );

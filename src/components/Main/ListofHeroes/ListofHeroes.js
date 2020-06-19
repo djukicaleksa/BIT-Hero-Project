@@ -11,9 +11,15 @@ class ListofHeroes extends React.Component {
     this.state = { heroes: [], serchedHero: null, teamMembers: [] };
   }
   componentDidMount() {
+    console.log(localStorage.getItem('myTeam'));
+
     heroService
       .fetchAll()
       .then((data) => this.setState({ heroes: data.data.results }));
+    if (localStorage.getItem('myTeam') !== null) {
+      this.setState({ teamMembers: JSON.parse(localStorage.getItem('myTeam')) });
+    }
+
   }
   getSearchedHero = (event) => {
     if (event.target.value) {
@@ -33,20 +39,22 @@ class ListofHeroes extends React.Component {
     }
   };
   addMember = (id, key) => {
-    localStorage.setItem()
-    this.state.heroes.map(hero => {
+    this.state.heroes.map((hero, i) => {
       if (id === hero.id && !this.state.teamMembers.includes(hero)) {
         // this.state.teamMembers.push(hero)
         this.setState({ teamMembers: [...this.state.teamMembers, hero] })
+        window.localStorage.setItem('myTeam', JSON.stringify(this.state.teamMembers));
       }
     }
     )
   }
+
   removeMember = (id, key) => {
     console.log(id);
     let prevMembers = this.state.teamMembers;
     let newMembers = prevMembers.filter(member => member.id !== id);
     this.setState({ teamMembers: newMembers });
+    window.localStorage.setItem('myTeam', this.state.teamMembers);
 
   }
 
