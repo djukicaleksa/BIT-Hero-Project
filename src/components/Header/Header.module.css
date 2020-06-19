@@ -1,7 +1,7 @@
-.Header__wrapper {
+.headerWrapper {
   background-color: #ec1d24;
 }
-.Header__title {
+.headerTitle {
   color: white;
   padding-left: 30px;
   text-decoration: underline #ec1d24;

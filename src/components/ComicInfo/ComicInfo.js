@@ -2,7 +2,7 @@ import React from "react";
 
 import { ComicService } from "../../Services/ComicService";
 
-import "./ComicInfo.css";
+import style from "./ComicInfo.module.css";
 
 class ComicInfo extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class ComicInfo extends React.Component {
   }
   render() {
     return this.state.comic !== null ? (
-      <div className="ComicInfro__wrapper">
+      <div className={style.ComicInfo}>
         <img
           src={
             this.state.comic.thumbnail.path +

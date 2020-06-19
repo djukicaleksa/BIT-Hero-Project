@@ -1,11 +1,11 @@
 import React from "react";
-import "./Header.css";
 import { Link } from "react-router-dom";
+import style from "./Header.module.css";
 
 const Header = () => (
-  <div className="Header__wrapper">
+  <div className={style.headerWrapper}>
     <Link to="/">
-      <h1 className="Header__title">Hero Team</h1>
+      <h1 className={style.headerTitle}>Hero Team</h1>
     </Link>
   </div>
 );

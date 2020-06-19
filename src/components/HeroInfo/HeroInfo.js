@@ -4,7 +4,7 @@ import { Comic } from "./Comic/Comic";
 import { Switch } from "react-materialize";
 import { heroService } from "../../Services/HeroService";
 
-import "./HeroInfo.css";
+import style from "./HeroInfo.module.css";
 import "materialize-css/dist/js/materialize.js";
 import "materialize-css/dist/css/materialize.css";
 
@@ -53,38 +53,40 @@ class HeroInfo extends React.Component {
     return (
       //We use ternar operator to check if we clicked on image, if we clicked imgFUllScreen is set to true and only fullscreen image is rendered
       this.state.imgFullScreen ? (
-        <div className="fullscreen">
+        <div className={style.fullscreen}>
           <img
+            className={style.heroImg}
             src={this.state.heroData.avatar}
             alt="slika"
             onClick={this.showFullImage}
           />
         </div>
       ) : (
-          <div className="infoPage">
-            <div className="imgContainer">
-              <img
+          <div className={style.infoPage}>
+            <div className={style.imgContainer}>
+              <img className={style.heroImg}
                 src={this.state.heroData.avatar}
                 alt="slika"
                 onClick={this.showFullImage}
               />
             </div>
-            <div className="dataContainer">
+            <div className={style.dataContainer}>
               <h2>{this.state.heroData.name}</h2>
               <ul>
-                <li>Appeared at {this.state.heroData.appears} comic issues</li>
-                <li>Last modified {this.state.heroData.modified}</li>
-                <a href={this.state.heroData.lastModified}>
-                  <li>Find char details here</li>
-                </a>
-                <a href={this.state.heroData.details}>
-                  <li>List of comics</li>
-                </a>
+
+                    <li>Appeared at {this.state.heroData.appears} comic issues</li>
+                  <li>Last modified {this.state.heroData.modified}</li>
+                  <a href={this.state.heroData.lastModified}>
+                   <li>Find char details here</li>
+                  </a>
+                  <a href={this.state.heroData.details}>
+                    <li>List of comics</li>
+                  </a>
               </ul>
             </div>
 
             {/* <button onClick={this.showComics}>Show Comics</button> */}
-            <div className="switch">
+            <div className={style.switch}>
               <Switch
                 id="Switch-11"
                 offLabel="Hide comics"
@@ -93,7 +95,7 @@ class HeroInfo extends React.Component {
               />
             </div>
 
-            <ul className="comicList">
+            <ul className={style.comicList}>
               {/**Here we check if comicsIsVIsible is set to true, if it is it will render comics,else it will render nothing */}
               {this.state.comicsIsVisible
                 ? this.state.comicInfo.map((comic, i) => {
