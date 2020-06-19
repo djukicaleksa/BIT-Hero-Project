@@ -1,13 +1,18 @@
 import React from "react";
 
 import { Comic } from "./Comic/Comic";
+import { HeroInfoFS } from "./HeroInfoFS";
 import { Switch } from "react-materialize";
+import { HeroInfoNormal } from "./HeroInfoNormal";
+import { ComicInfo } from "../ComicInfo/ComicInfo";
 import { heroService } from "../../Services/HeroService";
+
 
 import style from "./HeroInfo.module.css";
 import "materialize-css/dist/js/materialize.js";
 import "materialize-css/dist/css/materialize.css";
-
+import { Modal, Button } from 'react-materialize';
+import { ComicService } from "../../Services/ComicService";
 
 class HeroInfo extends React.Component {
   constructor(props) {
@@ -17,11 +22,13 @@ class HeroInfo extends React.Component {
       comicInfo: [],
       imgFullScreen: false,
       comicsIsVIsible: false,
+      showModal: false,
+      comic: []
     };
   }
 
   componentDidMount() {
-    let id = this.props.match.params.id;
+    const id = this.props.match.params.id;
     heroService
       .fetch(id).then((heroData) => this.setState({ heroData }));
   }
@@ -33,7 +40,7 @@ class HeroInfo extends React.Component {
   }
 
   showComics = () => {
-    let id = this.props.match.params.id;
+    const id = this.props.match.params.id;
     heroService
       .fetchCharComics(id)
       .then((comicDetails) => this.setState({ comicInfo: comicDetails }));
@@ -44,6 +51,20 @@ class HeroInfo extends React.Component {
       : this.setState({ comicsIsVisible: true });
   };
 
+  showModal = (event) => {
+    //THis is the correct way of writing this because fetch is async
+    const id = event.currentTarget.getAttribute('data-id');
+
+    new ComicService()
+      .fetchAxios(id)
+      .then((res) => {
+        this.setState((currentState) => ({
+          comic: res.data.results[0],
+          showModal: !currentState.showModal
+        }))
+      });
+  }
+
   render() {
     //This if awaits for state to get loaded
     if (this.state.heroData === null) {
@@ -51,115 +72,90 @@ class HeroInfo extends React.Component {
     }
 
     return (
-      //We use ternar operator to check if we clicked on image, if we clicked imgFUllScreen is set to true and only fullscreen image is rendered
-      this.state.imgFullScreen ? (
-        <div className={style.fullscreen}>
-          <img
-            className={style.heroImg}
-            src={this.state.heroData.avatar}
-            alt="slika"
-            onClick={this.showFullImage}
-          />
-        </div>
-      ) : (
-          <div className={style.infoPage}>
-            <div className={style.imgContainer}>
-              <img className={style.heroImg}
-                src={this.state.heroData.avatar}
-                alt="slika"
-                onClick={this.showFullImage}
-              />
-            </div>
-            <div className={style.dataContainer}>
-              <h2>{this.state.heroData.name}</h2>
-              <ul>
 
-                    <li>Appeared at {this.state.heroData.appears} comic issues</li>
-                  <li>Last modified {this.state.heroData.modified}</li>
-                  <a href={this.state.heroData.lastModified}>
-                   <li>Find char details here</li>
-                  </a>
-                  <a href={this.state.heroData.details}>
-                    <li>List of comics</li>
-                  </a>
-              </ul>
-            </div>
+      this.state.showModal ? <div>
 
-            {/* <button onClick={this.showComics}>Show Comics</button> */}
-            <div className={style.switch}>
-              <Switch
-                id="Switch-11"
-                offLabel="Hide comics"
-                onChange={this.showComics}
-                onLabel="Show comics"
-              />
-            </div>
-
-            <ul className={style.comicList}>
-              {/**Here we check if comicsIsVIsible is set to true, if it is it will render comics,else it will render nothing */}
-              {this.state.comicsIsVisible
-                ? this.state.comicInfo.map((comic, i) => {
-                  if (comic.images[0] === undefined) {
-                    return null;
-                  }
-                  return (
-                    <Comic
-                      key={i}
-                      id={comic.id}
-                      name={comic.title}
-                      url={
-                        comic.images[0].path + "." + comic.images[0].extension
-                      }
-                    />
-                  );
-                })
-                : null}
-            </ul>
+        <Modal
+          actions={[
+            <Button flat modal="close" node="button" waves="green" onClick={() => { this.setState({ showModal: false }) }}>Close</Button>
+          ]}
+          bottomSheet={false}
+          fixedFooter={false}
+          header="Modal Header"
+          id="modal1"
+          open={true}
+          options={{
+            dismissible: true,
+            endingTop: '10%',
+            inDuration: 250,
+            onCloseEnd: null,
+            onCloseStart: null,
+            onOpenEnd: null,
+            onOpenStart: null,
+            opacity: 0.5,
+            outDuration: 250,
+            preventScrolling: true,
+            startingTop: '4%'
+          }}
+        >
+          <div>
+            <img src={this.state.comic.images[0].path + '.' + this.state.comic.images[0].extension} alt='oops'></img>
           </div>
-        )
+
+        </Modal>
+      </div> :
+        //We use ternar operator to check if we clicked on image, if we clicked imgFUllScreen is set to true and only fullscreen image is rendered
+        this.state.imgFullScreen ? (
+
+          <HeroInfoFS avatar={this.state.heroData.avatar} showFullImage={this.showFullImage}></HeroInfoFS>
+        ) : (
+            <div className={style.infoPage}>
+
+              <HeroInfoNormal
+                avatar={this.state.heroData.avatar}
+                showFullImage={this.showFullImage}
+                name={this.state.heroData.name}
+                appears={this.state.heroData.appears}
+                modified={this.state.heroData.modified}
+                lastModified={this.state.heroData.lastModified}
+                details={this.state.heroData.details}>
+              </HeroInfoNormal>
+
+              <div className={style.switch}>
+                <Switch
+                  id="Switch-11"
+                  offLabel="Hide comics"
+                  onChange={this.showComics}
+                  onLabel="Show comics"
+                />
+              </div>
+
+              <ul className={style.comicList}>
+                {/**Here we check if comicsIsVIsible is set to true, if it is it will render comics,else it will render nothing */}
+                {this.state.comicsIsVisible
+                  ? this.state.comicInfo.map((comic, i) => {
+                    if (comic.images[0] === undefined) {
+                      return null;
+                    }
+                    console.log(comic);
+
+                    return (
+                      <Comic
+                        key={i}
+                        id={comic.id}
+                        name={comic.title}
+                        url={comic.images[0].path + "." + comic.images[0].extension}
+                        showModal={this.showModal}
+                      />
+                    );
+                  })
+                  : null}
+              </ul>
+            </div >
+          )
     );
   }
 }
 
 export { HeroInfo };
 
-//   }
-//   componentDidMount() {
-//     let id = this.props.match.params.id;
-//     new HeroService().fetch(id).then((heroData) => this.setState({ heroData }));
-//   }
-
-//   render() {
-//     //This if awaits for state to get loaded
-//     if (!this.state.heroData) {
-//       return null;
-//     }
-
-//     const { heroData } = this.state;
-
-//     return (
-//       <div className="infoPage">
-//         <div className="imgContainer">
-//           <img src={heroData.avatar} alt="slika" />
-//         </div>
-//         <div className="dataContainer">
-//           <h2>{this.state.heroData.name}</h2>
-//           <ul>
-//             <li>
-//               Appeared at {this.state.heroData.comics.available} comic issues
-//             </li>
-//             <li>Last modified {this.state.heroData.modified}</li>
-//             <a href={this.state.heroData.urls[1].url}>
-//               <li>Find char details here</li>
-//             </a>
-//             <a href={this.state.heroData.urls[0].url}>
-//               <li>List of comics</li>
-//             </a>
-//           </ul>
-//         </div>
-//       </div>
-//     );
-//   }
-// }
-
-// export { HeroInfo };

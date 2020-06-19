@@ -1,11 +1,11 @@
-.ListofHeroes__wrapper {
+.wrapper {
   width: 60%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
 }
-.ListofHeroes__searchField {
+.searchField {
   padding-left: 15px;
   margin-left: 95px;
 }

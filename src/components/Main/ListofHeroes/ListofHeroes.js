@@ -1,67 +1,63 @@
 import React from "react";
-import { heroService } from "../../../Services/HeroService";
+
 import { Hero } from "../Hero/Hero";
-import { Search } from "../../Serach/Serach";
 import { TeamMember } from "../TeamMember/TeamMember";
-import "./ListofHeroes.css";
+import { heroService } from "../../../Services/HeroService";
+
+import style from "./ListofHeroes.module.css";
+import { storage } from "../../../shared/storage";
 
 class ListofHeroes extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { heroes: [], serchedHero: null, teamMembers: [] };
+    this.state = {
+      heroes: [],
+      serchedHero: null,
+      teamMembers: storage.get('myTeam') || [],
+    };
   }
 
-
   componentDidMount() {
-
-    console.log(localStorage.getItem('myTeam'));
-
     heroService
       .fetchAll()
       .then((data) => this.setState({ heroes: data.data.results }));
-
-    if (localStorage.getItem('myTeam') !== null) {
-      this.setState({ teamMembers: JSON.parse(localStorage.getItem('myTeam')) });
-    }
-
   }
+
   getSearchedHero = (event) => {
     if (event.target.value) {
       heroService
         .search(event.target.value)
         .then((res) =>
           res.data.results.length !== 0
-            ? this.setState({ serchedHero: res.data.results })
+            ? this.setState({ heroes: res.data.results })
             : null
         );
     }
     if (event.target.value === "") {
-      this.setState({ serchedHero: null });
+      // this.setState({ serchedHero: null });
       heroService
         .fetchAll()
         .then((data) => this.setState({ heroes: data.data.results }));
     }
   };
-  addMember = (id, key) => {
-    this.state.heroes.map((hero, i) => {
-      if (id === hero.id && !this.state.teamMembers.includes(hero)) {
-        let newTeam = this.state.teamMembers;
-        newTeam.push(hero)
-        // this.setState({ teamMembers: [...this.state.teamMembers, hero] })
-        this.setState({ teamMembers: newTeam })
-        window.localStorage.setItem('myTeam', JSON.stringify(this.state.teamMembers));
 
-      }
-    }
-    )
+  addMember = (id) => {
+    const inTeam = !!this.state.teamMembers.find(hero => hero.id === id);
+
+    if (inTeam) return;
+
+    const newTeamMember = this.state.heroes.find(hero => hero.id === id);
+    const extendedTeam = [...this.state.teamMembers, newTeamMember];
+    this.setState({ teamMembers: extendedTeam })
+
+    storage.set('myTeam', extendedTeam)
   }
 
   removeMember = (id, key) => {
-    console.log(id);
-    let prevMembers = this.state.teamMembers;
-    let newMembers = prevMembers.filter(member => member.id !== id);
-    this.setState({ teamMembers: newMembers });
-    window.localStorage.setItem('myTeam', JSON.stringify(newMembers));
+
+    const teamMembers = this.state.teamMembers.filter(member => member.id !== id);
+    this.setState({ teamMembers });
+    storage.set('myTeam', teamMembers);
 
   }
 
@@ -73,34 +69,23 @@ class ListofHeroes extends React.Component {
             type="search"
             placeholder="Enter heroes name...."
             onChange={this.getSearchedHero}
-            className="ListofHeroes__searchField"
+            className={style.searchField}
           />
-          {this.state.serchedHero !== null ? (
-            this.state.serchedHero.map((item) => (
-              <Search
-                id={item.id}
+          <div className={style.wrapper}>
+            {this.state.heroes.map((item, i) => (
+              <Hero
+                key={i}
                 name={item.name}
                 image={item.thumbnail.path + "." + item.thumbnail.extension}
+                id={item.id}
+                addMember={this.addMember}
               />
-            ))
-          ) : (
-              <div className="ListofHeroes__wrapper">
-                {this.state.heroes.map((item, i) => (
-                  <Hero
-                    key={i}
-                    name={item.name}
-                    image={item.thumbnail.path + "." + item.thumbnail.extension}
-                    id={item.id}
-                    addMember={this.addMember}
-                  />
-                ))}
-              </div>
-            )}
-          ;
-      </div>
-        <div className='team'>
+            ))}
+          </div>
+        </div>
+        <div className={style.team}>
           <h1>My Team</h1>
-          {this.state.teamMembers.map((member, i) => <TeamMember key={i} removeMember={this.removeMember} id={member.id} url={`${member.thumbnail.path}.${member.thumbnail.extension}`} name={member.name}></TeamMember>)}
+          {this.state.teamMembers.map((member, i) => <TeamMember key={i} removeMember={this.removeMember} data-id={member.id} url={`${member.thumbnail.path}.${member.thumbnail.extension}`} name={member.name}></TeamMember>)}
         </div>
       </div>
     );
